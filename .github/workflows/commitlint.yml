@@ -6,7 +6,7 @@ name: 🚨 Commitlint
 on:
   # Triggers the workflow on pull request events but only for the "develop" branch
   pull_request:
-    branches: [ "develop" ]
+    branches: ["develop"]
     types:
       - edited
 
@@ -24,6 +24,7 @@ jobs:
           else
             echo "Title has not changed."
             echo "title_changed=false" >> $GITHUB_ENV
+          fi
 
       - name: Run if title changed
         if: env.title_changed == 'true'
