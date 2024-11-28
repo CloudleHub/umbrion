@@ -1,0 +1,31 @@
+# This is a basic workflow to help you get started with Actions
+
+name: 🚨 Commitlint
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on pull request events but only for the "develop" branch
+  pull_request:
+    branches: [ "develop" ]
+    types:
+      - edited
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  title-change:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if the PR title changed
+        id: check_title
+        run: |
+          if [[ "${{ github.event.changes.title }}" ]]; then
+            echo "Title has changed."
+            echo "title_changed=true" >> $GITHUB_ENV
+          else
+            echo "Title has not changed."
+            echo "title_changed=false" >> $GITHUB_ENV
+
+      - name: Run if title changed
+        if: env.title_changed == 'true'
+        run: |
+          echo "The PR title was changed. Taking action now!"
