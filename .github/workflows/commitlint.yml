@@ -8,7 +8,8 @@ on:
   pull_request:
     branches: ["develop"]
     types:
-      - edited
+      - opened # Trigger when the PR is created.
+      - edited # Trigger when the PR title or description changes.
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
