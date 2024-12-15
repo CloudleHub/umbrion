@@ -1,33 +1,40 @@
-# This is a basic workflow to help you get started with Actions
-
 name: 🚨 Commitlint
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on pull request events but only for the "develop" branch
   pull_request:
     branches: ["develop"]
     types:
-      - opened # Trigger when the PR is created.
-      - edited # Trigger when the PR title or description changes.
+      - opened
+      - edited
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  title-change:
+  commitlint:
     runs-on: ubuntu-latest
     steps:
-      - name: Check if the PR title changed
-        id: check_title
-        run: |
-          if [[ "${{ github.event.changes.title }}" ]]; then
-            echo "Title has changed."
-            echo "title_changed=true" >> $GITHUB_ENV
-          else
-            echo "Title has not changed."
-            echo "title_changed=false" >> $GITHUB_ENV
-          fi
+      # Checkout the code (mandatory step to access your repo)
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Run if title changed
-        if: env.title_changed == 'true'
+      # Setup Node.js (optional if you're certain the runner already has a compatible version)
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      # Install dependencies with pnpm
+      - name: Install dependencies
         run: |
-          echo "The PR title was changed. Taking action now!"
+          npm install -g pnpm
+          pnpm install
+
+      # Create a Commitlint configuration
+      - name: Setup Commitlint configuration
+        run: |
+          echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > commitlint.config.js
+
+      # Run Commitlint to verify PR title
+      - name: Check PR title with Commitlint
+        run: |
+          echo "${{ github.event.pull_request.title }}" | pnpm exec commitlint
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
