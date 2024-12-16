@@ -6,7 +6,8 @@
     "nx": "nx",
     "build": "nx run-many --target=build --all",
     "build:affected": "nx affected --target=build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cz": "cz"
   },
   "keywords": [],
   "author": "",
