@@ -1,0 +1,28 @@
+name: 🔨 Build
+
+on:
+  pull_request:
+    branches: ["develop"]
+    types:
+      - opened
+      - edited
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: |
+          npm install -g pnpm
+          pnpm install
+
+      - name: Run Build
+        run: pnpm run build:affected
